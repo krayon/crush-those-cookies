@@ -37,8 +37,8 @@ function startup(data, reason) {
     
     let Notifications = new Imports.Notifications(extName, Prefs);
     let Crusher = new Imports.Crusher(Prefs, Buttons, Whitelist, Log, Notifications, Utils);
+    let Tabs = new Imports.Tabs(Crusher, Buttons);
     
-    Tabs = new Imports.Tabs(Crusher, Buttons);
     Windows = new Imports.Windows(Tabs, Buttons, Crusher, Prefs);
     
     // initialize
