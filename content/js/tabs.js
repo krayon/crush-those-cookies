@@ -13,9 +13,9 @@ let Tabs = function(Crusher, Buttons) {
     
     this.onTabProgress = {    
         onLocationChange: function(aBrowser, aWebProgress, aRequest, aURI, aFlag) {
-            if (aFlag & Components.interfaces.nsIWebProgress.LOCATION_CHANGE_SAME_DOCUMENT) {
+            /*if (aFlag & Components.interfaces.nsIWebProgressListener.LOCATION_CHANGE_SAME_DOCUMENT) {
                 return;
-            }
+            }*/
             
             let domain = aBrowser.contentDocument.domain;
             let previousDomain = aBrowser.previousDomain;
