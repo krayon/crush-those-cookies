@@ -5,5 +5,4 @@ zip -rq crush-those-cookies.xpi \
     bootstrap.js \
     chrome.manifest \
     install.rdf \
-    AUTHORS \
     LICENSE
