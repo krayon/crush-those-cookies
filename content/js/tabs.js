@@ -29,11 +29,7 @@ let Tabs = function(Crusher, Buttons) {
     };
     
     this.onProgress = {
-        onLocationChange: function(aWebProgress, aRequest, aLocation, aFlag) {
-            if (aFlag & Components.interfaces.nsIWebProgress.LOCATION_CHANGE_SAME_DOCUMENT) {
-                return;
-            }
-            
+        onLocationChange: function(aWebProgress, aRequest, aLocation, aFlag) {            
             Buttons.refresh();
         }
     };
