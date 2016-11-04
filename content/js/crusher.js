@@ -17,13 +17,15 @@ let Crusher = function(Prefs, Buttons, Whitelist, Log, Notifications, Utils) {
     };
     
     this.execute = function(domain, timestamp, ignoreBrowsersCheck) {
-        if (Prefs.getValue("keepCrushingThirdPartyCookies")) {
-            this.executeForCookies(Services.cookies.enumerator, timestamp, ignoreBrowsersCheck);
-        } else if (typeof domain === "string") {
-            this.executeForCookies(Services.cookies.getCookiesFromHost(domain), timestamp, ignoreBrowsersCheck);
-        } else if (domain.constructor === Array) {
-            for (let currentDomain of domain) {
-                this.executeForCookies(Services.cookies.getCookiesFromHost(currentDomain), timestamp, ignoreBrowsersCheck);
+        if (!Prefs.getValue("suspendCrushing")) {
+            if (Prefs.getValue("keepCrushingThirdPartyCookies")) {
+                this.executeForCookies(Services.cookies.enumerator, timestamp, ignoreBrowsersCheck);
+            } else if (typeof domain === "string") {
+                this.executeForCookies(Services.cookies.getCookiesFromHost(domain), timestamp, ignoreBrowsersCheck);
+            } else if (domain.constructor === Array) {
+                for (let currentDomain of domain) {
+                    this.executeForCookies(Services.cookies.getCookiesFromHost(currentDomain), timestamp, ignoreBrowsersCheck);
+                }
             }
         }
     };
