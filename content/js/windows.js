@@ -1,6 +1,7 @@
 let EXPORTED_SYMBOLS = ["Windows"];
 
 Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
 
 let Windows = function(Tabs, Buttons, Crusher, Prefs) {
     this.onCloseWindow = function(event) {
@@ -47,10 +48,12 @@ let Windows = function(Tabs, Buttons, Crusher, Prefs) {
                 domWindow.removeEventListener("load", arguments.callee, false);
                 domWindow.setTimeout(function() {
                     if (domWindow.document.documentElement.getAttribute("windowtype") === "navigator:browser") {
-                        Tabs.init(domWindow);
-                        Buttons.init(domWindow);
+                        if (!PrivateBrowsingUtils.isWindowPrivate(domWindow)) {
+                            Tabs.init(domWindow);
+                            domWindow.addEventListener("close", that.onCloseWindow, true);
+                        }
                         
-                        domWindow.addEventListener("close", that.onCloseWindow, true);
+                        Buttons.init(domWindow);
                     }
                 }, 0, domWindow);
             }, false);
@@ -65,7 +68,10 @@ let Windows = function(Tabs, Buttons, Crusher, Prefs) {
         while (windowsEnumerator.hasMoreElements()) {
             let window = windowsEnumerator.getNext().QueryInterface(Components.interfaces.nsIDOMWindow);
             
-            Tabs.init(window);
+            if (!PrivateBrowsingUtils.isWindowPrivate(window)) {
+                Tabs.init(window);
+            }
+            
             Buttons.init(window, firstRun);
         }
         
@@ -81,8 +87,11 @@ let Windows = function(Tabs, Buttons, Crusher, Prefs) {
             let window = windowsEnumerator.getNext().QueryInterface(Components.interfaces.nsIDOMWindow);
             
             if (window.document.documentElement.getAttribute("windowtype") === "navigator:browser") {
-                window.removeEventListener("close", this.onCloseWindow);
-                Tabs.clear(window);
+                if (!PrivateBrowsingUtils.isWindowPrivate(window)) {
+                    window.removeEventListener("close", this.onCloseWindow);
+                    Tabs.clear(window);
+                }
+                
                 Buttons.clear(window);
             }
         }

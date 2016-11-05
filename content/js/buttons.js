@@ -1,6 +1,7 @@
 let EXPORTED_SYMBOLS = ["Buttons"];
 
 Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
 
 let Buttons = function(extName, Prefs, Whitelist, Utils) {
     this.contentURL = "chrome://" + extName + "/content/";
@@ -24,7 +25,8 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         initial: "Didn't crush any cookies yet",
         suspended: "Suspended",
         crushed: "Recently crushed cookies from ",
-        notCrushed: "Previously crushed cookies from "
+        notCrushed: "Previously crushed cookies from ",
+        privateWindow: "Private window omitted"
     };
         
     this.menuitemClass = "menuitem-non-iconic";
@@ -44,6 +46,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         remove: "Remove ",
         removeEnding: " from whitelist",
         addRemoveNoDomain: "Current document has no domain",
+        privateWindow: "No action for a private window",
         manageWhitelist: "Manage whitelisted domains",
         log: "View activity log"
     };
@@ -153,31 +156,37 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
                                                         Buttons.menuitemLabels.suspend);
             
             let menuitemWhitelistAddRemove = document.getElementById(Buttons.menuitemIds.whitelistAddRemove);
-            let domain = window.gBrowser.contentDocument.domain;
             
-            if (domain) {
-                let rawDomain = Utils.getRawDomain(domain);
-                
-                let whitelisted = Whitelist.isWhitelisted(rawDomain);
-                
-                if (whitelisted) {
-                    if (typeof whitelisted === "string") {
-                        rawDomain = whitelisted;
-                    }
-                    
-                    menuitemWhitelistAddRemove.setAttribute("disabled", "false");
-                    menuitemWhitelistAddRemove.setAttribute("label", Buttons.menuitemLabels.remove +
-                                                                     rawDomain +
-                                                                     Buttons.menuitemLabels.removeEnding);
-                } else {
-                    menuitemWhitelistAddRemove.setAttribute("disabled", "false");
-                    menuitemWhitelistAddRemove.setAttribute("label", Buttons.menuitemLabels.add +
-                                                                     rawDomain +
-                                                                     Buttons.menuitemLabels.addEnding);
-                }
-            } else {
+            if (PrivateBrowsingUtils.isWindowPrivate(window)) {
                 menuitemWhitelistAddRemove.setAttribute("disabled", "true");
-                menuitemWhitelistAddRemove.setAttribute("label", Buttons.menuitemLabels.addRemoveNoDomain);
+                menuitemWhitelistAddRemove.setAttribute("label", Buttons.menuitemLabels.privateWindow);
+            } else {
+                let domain = window.gBrowser.contentDocument.domain;
+                
+                if (domain) {
+                    let rawDomain = Utils.getRawDomain(domain);
+                    
+                    let whitelisted = Whitelist.isWhitelisted(rawDomain);
+                    
+                    if (whitelisted) {
+                        if (typeof whitelisted === "string") {
+                            rawDomain = whitelisted;
+                        }
+                        
+                        menuitemWhitelistAddRemove.setAttribute("disabled", "false");
+                        menuitemWhitelistAddRemove.setAttribute("label", Buttons.menuitemLabels.remove +
+                                                                         rawDomain +
+                                                                         Buttons.menuitemLabels.removeEnding);
+                    } else {
+                        menuitemWhitelistAddRemove.setAttribute("disabled", "false");
+                        menuitemWhitelistAddRemove.setAttribute("label", Buttons.menuitemLabels.add +
+                                                                         rawDomain +
+                                                                         Buttons.menuitemLabels.addEnding);
+                    }
+                } else {
+                    menuitemWhitelistAddRemove.setAttribute("disabled", "true");
+                    menuitemWhitelistAddRemove.setAttribute("label", Buttons.menuitemLabels.addRemoveNoDomain);
+                }
             }
             
             let menuitemViewLog = window.document.getElementById(Buttons.menuitemIds.viewLog);
@@ -241,10 +250,6 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
                     someBar.insertItem(this.buttonId, before);
                 }
             }
-        }
-        
-        if (Prefs.getValue("suspendCrushing")) {
-            this.setIconAndTooltipSuspended();
         }
         
         this.afterCustomization = this.afterCustomization.bind(this);
@@ -341,14 +346,16 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         let button = window.document.getElementById(this.buttonId);        
         
         if (button) {
-            let domain = window.gBrowser.contentDocument.domain;
-            
-            let rawDomain = Utils.getRawDomain(domain);
-            
             if (Prefs.getValue("suspendCrushing")) {
                 button.setAttribute("tooltiptext", this.tooltipTexts.suspended);
                 button.style.listStyleImage = "url(" + this.contentURL + this.iconFileNames.suspended + ")";
+            } else if (PrivateBrowsingUtils.isWindowPrivate(window)) {
+                button.setAttribute("tooltiptext", this.tooltipTexts.privateWindow);
+                button.style.listStyleImage = "url(" + this.contentURL + this.iconFileNames.whitelisted + ")";
             } else {
+                let domain = window.gBrowser.contentDocument.domain;
+                let rawDomain = Utils.getRawDomain(domain);
+            
                 if (!rawDomain || Whitelist.isWhitelisted(rawDomain)) {
                     button.style.listStyleImage = "url(" + this.contentURL + this.iconFileNames.whitelisted + ")";
                 } else {

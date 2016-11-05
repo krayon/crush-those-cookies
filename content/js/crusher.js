@@ -1,6 +1,7 @@
 let EXPORTED_SYMBOLS = ["Crusher"];
 
 Components.utils.import("resource://gre/modules/Services.jsm");
+Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
 
 let Crusher = function(Prefs, Buttons, Whitelist, Log, Notifications, Utils) {
     this.prepare = function(domain, immediately) {
@@ -81,6 +82,11 @@ let Crusher = function(Prefs, Buttons, Whitelist, Log, Notifications, Utils) {
         
         while (windowsEnumerator.hasMoreElements()) {
             let window = windowsEnumerator.getNext().QueryInterface(Components.interfaces.nsIDOMWindow);
+            
+            if (PrivateBrowsingUtils.isWindowPrivate(window)) {
+                continue;
+            }
+            
             let tabBrowser = window.gBrowser;
             
             for (let browser of tabBrowser.browsers) {
