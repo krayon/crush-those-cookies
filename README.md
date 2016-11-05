@@ -5,12 +5,12 @@ This is an extension for Pale Moon web browser which crushes those cookies which
 Run build.sh script in a terminal on Linux or any similar environment for Windows like Cygwin. The extension's .xpi file should appear right away in the same location.
 
 ### Usage
-The latest installable release is always available at the [Pale Moon add-ons website](https://addons.palemoon.org/extensions/privacy-and-security/crush-those-cookies/). After installation the menu button should appear in the toolbar. All detailed preferences of the extension are accessible within Add-ons Manager page.
+After installation the menu button should appear in the toolbar. All detailed preferences of the extension are accessible within Add-ons Manager page.
 
-Example of manual domain whitelisting:
+#### Example of manual domain whitelisting
 - adding __palemoon.&#8203;org__ to whitelisted domains will prevent removing cookies coming from palemoon.org
 - adding __*.palemoon.org__ will prevent removing cookies coming from its subdomains like forum.palemoon.org or addons.palemoon.org
 - adding __.palemoon.org__ will prevent removing cookies coming from both palemoon.org and its subdomains like forum.palemoon.org or addons.palemoon.org
 
 ### Notice
-As this extension by default removes third-party cookies, it might possibly break sessions or negatively affect browsing experience on some websites with distributed content. This may cover banking, social or any other interactive web services. Be also careful while restoring previous session when websites in your tabs may not be loaded yet. Either reload all the tabs at once or temporarily suspend crushing cookies until important tabs are reloaded to avoid accidental cookie loss. You have been warned. Use this extension at your own risk.
+As this extension by default removes third-party cookies, it might possibly break sessions or negatively affect browsing experience on some websites with distributed content. This may cover banking, social or any other interactive web services. Be also careful while restoring previous session when websites in your tabs may not be loaded yet. Either reload all the tabs at once or temporarily suspend crushing cookies until important tabs are reloaded. Use this extension at your own risk.
