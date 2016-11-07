@@ -61,6 +61,7 @@ function startup(data, reason) {
     Services.obs.addObserver(onPrefsApply, "ctcPrefsApply", false);
     Services.obs.addObserver(Log.onOpen, "ctcLogOpen", false);
     Services.obs.addObserver(Log.onClear, "ctcLogClear", false);
+    Services.obs.addObserver(Log.onClear, "browser:purge-session-history", false);
 }
 
 function shutdown(data, reason) {
@@ -70,6 +71,7 @@ function shutdown(data, reason) {
     Services.obs.removeObserver(onPrefsApply, "ctcPrefsApply");
     Services.obs.removeObserver(Log.onOpen, "ctcLogOpen");
     Services.obs.removeObserver(Log.onClear, "ctcLogClear");
+    Services.obs.removeObserver(Log.onClear, "browser:purge-session-history");
     
     // cleanup
     Windows.clear();
