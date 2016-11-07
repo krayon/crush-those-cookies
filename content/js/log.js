@@ -1,5 +1,7 @@
 let EXPORTED_SYMBOLS = ["Log"];
 
+Components.utils.import("resource://gre/modules/Services.jsm");
+
 let Log = function(Prefs) {
     this.maxMessages = 100;
     this.loggedMessages = [];
@@ -21,6 +23,15 @@ let Log = function(Prefs) {
             
             if (this.loggedMessages.length > this.maxMessages) {
                 this.loggedMessages.shift();
+            }
+            
+            let ctcLogWindow = Services.wm.getMostRecentWindow("ctcLogWindow");
+            if (ctcLogWindow) {
+                let logTextbox = ctcLogWindow.document.getElementById("logTextbox");
+                if (logTextbox) {
+                    logTextbox.value += message + "\n\n";
+                    logTextbox.selectionStart = logTextbox.value.length;
+                }
             }
         }
     };
