@@ -1,6 +1,7 @@
 let EXPORTED_SYMBOLS = ["Log"];
 
 let Log = function(Prefs) {
+    this.maxMessages = 100;
     this.loggedMessages = [];
     
     this.log = function(crushedDomainsString) {
@@ -16,6 +17,10 @@ let Log = function(Prefs) {
                           crushedDomainsString;
             
             this.loggedMessages.push(message);
+            
+            if (this.loggedMessages.length > this.maxMessages) {
+                this.loggedMessages.shift();
+            }
         }
     };
     
