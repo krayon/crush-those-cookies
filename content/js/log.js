@@ -56,6 +56,15 @@ let Log = function(Prefs) {
         Log: this,
         observe: function(aSubject, aTopic, aData) {
             this.Log.loggedMessages = [];
+            
+            let ctcLogWindow = Services.wm.getMostRecentWindow("ctcLogWindow");
+            if (ctcLogWindow) {
+                let logTextbox = ctcLogWindow.document.getElementById("logTextbox");
+                if (logTextbox) {
+                    logTextbox.value = "";
+                    logTextbox.selectionStart = 0;
+                }
+            }
         }
     };
 };
