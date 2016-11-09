@@ -18,10 +18,6 @@
       
         function onClearLog() {
             Services.obs.notifyObservers(window, "ctcLogClear", null);
-        
-            let logTextbox = window.document.getElementById("logTextbox");
-            logTextbox.value = "";
-            logTextbox.selectionStart = 0;
         }
       
         window.onload = onWindowLoad;
