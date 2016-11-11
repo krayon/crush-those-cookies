@@ -146,6 +146,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         // create menupopup element
         let menupopup = document.createElement("menupopup");
         menupopup.setAttribute("id", this.menupopupId);
+        menupopup.style.MozAppearance = "none";
         menupopup.addEventListener("popupshowing", function(event) {
             let window = Services.wm.getMostRecentWindow("navigator:browser");
             let document = window.document;
@@ -193,10 +194,15 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
             menuitemViewLog.setAttribute("disabled", !Prefs.getValue("enableLogging"));
         }, false);
         
+        let menuitemSeparator1 = document.createElement("menuseparator");
+        let menuitemSeparator2 = document.createElement("menuseparator");
+        
         // append menuitems to the menupopup
         menupopup.appendChild(menuitemSuspendResume);
+        menupopup.appendChild(menuitemSeparator1);
         menupopup.appendChild(menuitemWhitelistAddRemove);
         menupopup.appendChild(menuitemManageWhitelist);
+        menupopup.appendChild(menuitemSeparator2);
         menupopup.appendChild(menuitemViewLog);
         
         // append menupopup to the button
