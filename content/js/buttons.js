@@ -33,6 +33,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         suspendResume: "ctcSuspendResume",
         whitelistAddRemove: "ctcWhitelistAddRemove",
         manageWhitelist: "ctcManageWhitelist",
+        removeIndividual: "ctcRemoveIndividual",
         viewLog: "ctcViewLog"
     };
     
@@ -46,6 +47,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         addRemoveNoDomain: "Current document has no domain",
         privateWindow: "No action for a private window",
         manageWhitelist: "Manage whitelisted domains",
+        removeIndividual: "Remove individual cookies",
         log: "Show activity log"
     };
         
@@ -124,6 +126,30 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
             }
         }, false);
         
+        let menuitemRemoveIndividual = document.createElement("menuitem");
+        menuitemRemoveIndividual.setAttribute("id", this.menuitemIds.removeIndividual);
+        menuitemRemoveIndividual.setAttribute("label", this.menuitemLabels.removeIndividual);
+        menuitemRemoveIndividual.addEventListener("command", function(event) {
+            let window = Services.wm.getMostRecentWindow("navigator:browser");
+            let domain = window.gBrowser.contentDocument.domain;
+            
+            let params = null;
+            
+            if (domain) {
+                let rawDomain = Utils.getRawDomain(domain);
+                params = {filterString: rawDomain};
+            }
+            
+            let existingWindow = Services.wm.getMostRecentWindow("Browser:Cookies");
+            if (existingWindow) {
+                existingWindow.focus();
+            } else {
+                let window = Services.wm.getMostRecentWindow("navigator:browser");
+                window.openDialog("chrome://browser/content/preferences/cookies.xul", "Browser:Cookies",
+                                  "minimizable,centerscreen", params);
+            }
+        }, false);
+        
         let menuitemViewLog = document.createElement("menuitem");
         menuitemViewLog.setAttribute("id", this.menuitemIds.viewLog);
         menuitemViewLog.setAttribute("label", this.menuitemLabels.log);
@@ -196,6 +222,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         menupopup.appendChild(menuitemWhitelistAddRemove);
         menupopup.appendChild(menuitemManageWhitelist);
         menupopup.appendChild(menuseparator2);
+        menupopup.appendChild(menuitemRemoveIndividual);
         menupopup.appendChild(menuitemViewLog);
         
         // append menupopup to the button
