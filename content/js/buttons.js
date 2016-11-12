@@ -48,7 +48,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         addRemoveNoDomain: "Current document has no domain",
         privateWindow: "No action for a private window",
         manageWhitelist: "Manage whitelisted domains",
-        log: "View activity log"
+        log: "Show activity log"
     };
         
     this.menupopupId = "ctcMenupopup";
