@@ -28,8 +28,6 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         notCrushed: "Previously crushed cookies from ",
         privateWindow: "Private window omitted"
     };
-        
-    this.menuitemClass = "menuitem-non-iconic";
     
     this.menuitemIds = {
         suspendResume: "ctcSuspendResume",
@@ -77,7 +75,6 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         // create menuitems
         let menuitemSuspendResume = document.createElement("menuitem");
         menuitemSuspendResume.setAttribute("id", this.menuitemIds.suspendResume);
-        menuitemSuspendResume.setAttribute("class", this.menuitemClass);
         menuitemSuspendResume.addEventListener("command", function(event) {
             if (Prefs.getValue("suspendCrushing")) {
                 Prefs.setValue("suspendCrushing", false);
@@ -91,7 +88,6 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         
         let menuitemWhitelistAddRemove = document.createElement("menuitem");
         menuitemWhitelistAddRemove.setAttribute("id", this.menuitemIds.whitelistAddRemove);
-        menuitemWhitelistAddRemove.setAttribute("class", this.menuitemClass);
         menuitemWhitelistAddRemove.addEventListener("command", function(event) {
             let window = Services.wm.getMostRecentWindow("navigator:browser");
             let domain = window.gBrowser.contentDocument.domain;
@@ -118,7 +114,6 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         let menuitemManageWhitelist = document.createElement("menuitem");
         menuitemManageWhitelist.setAttribute("id", this.menuitemIds.manageWhitelist);
         menuitemManageWhitelist.setAttribute("label", this.menuitemLabels.manageWhitelist);
-        menuitemManageWhitelist.setAttribute("class", this.menuitemClass);
         menuitemManageWhitelist.addEventListener("command", function(event) {
             let existingWindow = Services.wm.getMostRecentWindow("ctcPrefsWindow");
             if (existingWindow) {
@@ -132,7 +127,6 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         let menuitemViewLog = document.createElement("menuitem");
         menuitemViewLog.setAttribute("id", this.menuitemIds.viewLog);
         menuitemViewLog.setAttribute("label", this.menuitemLabels.log);
-        menuitemViewLog.setAttribute("class", this.menuitemClass);
         menuitemViewLog.addEventListener("command", function(event) {
             let existingWindow = Services.wm.getMostRecentWindow("ctcLogWindow");
             if (existingWindow) {
@@ -146,7 +140,6 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         // create menupopup element
         let menupopup = document.createElement("menupopup");
         menupopup.setAttribute("id", this.menupopupId);
-        menupopup.style.MozAppearance = "none";
         menupopup.addEventListener("popupshowing", function(event) {
             let window = Services.wm.getMostRecentWindow("navigator:browser");
             let document = window.document;
@@ -194,10 +187,15 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
             menuitemViewLog.setAttribute("disabled", !Prefs.getValue("enableLogging"));
         }, false);
         
+        let menuseparator1 = document.createElement("menuseparator");
+        let menuseparator2 = document.createElement("menuseparator");
+        
         // append menuitems to the menupopup
         menupopup.appendChild(menuitemSuspendResume);
+        menupopup.appendChild(menuseparator1);
         menupopup.appendChild(menuitemWhitelistAddRemove);
         menupopup.appendChild(menuitemManageWhitelist);
+        menupopup.appendChild(menuseparator2);
         menupopup.appendChild(menuitemViewLog);
         
         // append menupopup to the button
