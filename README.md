@@ -3,9 +3,6 @@ This is an extension for Pale Moon web browser which crushes those cookies which
 
 A whitelist can be used to manually exclude domains, subdomains or basic wildcard domains from crushing cookies of their origin. The extension comes with a toolbar menu button providing quick access to some common actions including whitelist edition.
 
-### Building
-Run build.sh script in a terminal on Linux or any similar environment for Windows like Cygwin. The extension's .xpi file should appear right away in the same location as the script.
-
 ### Usage
 After installation the menu button should appear in the toolbar. All detailed preferences of the extension are accessible within Add-ons Manager page.
 
@@ -20,3 +17,6 @@ As this extension by default removes third-party cookies, it might possibly brea
 Be also careful while restoring previous tabs on the browser's startup. Either reload all the tabs at once or temporarily suspend crushing cookies until important tabs are loaded to avoid accidental cookie loss.
 
 Use it at your own risk.
+
+### Building
+Run build.sh script in a terminal on Linux or any similar environment for Windows like Cygwin. The extension's .xpi archive containing all necessary files will be created automatically.
