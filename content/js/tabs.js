@@ -31,6 +31,7 @@ let Tabs = function(Crusher, Buttons, Utils) {
     };
     
     this.init = function(window) {
+        let Tabs = this;
         Utils.setTimeout(function() {
             if (!Components.utils.isDeadWrapper(window)) {
                 let tabBrowser = window.gBrowser;
@@ -40,9 +41,9 @@ let Tabs = function(Crusher, Buttons, Utils) {
                     browser["previousDomain"] = browser.contentDocument.domain;
                 }
                 
-                tabBrowser.tabContainer.addEventListener("TabClose", this.onClose, false);
-                tabBrowser.addTabsProgressListener(this.onTabProgress);
-                tabBrowser.addProgressListener(this.onProgress);
+                tabBrowser.tabContainer.addEventListener("TabClose", Tabs.onClose, false);
+                tabBrowser.addTabsProgressListener(Tabs.onTabProgress);
+                tabBrowser.addProgressListener(Tabs.onProgress);
             }
         }, 3);
     };
