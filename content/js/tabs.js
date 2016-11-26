@@ -1,6 +1,6 @@
 let EXPORTED_SYMBOLS = ["Tabs"];
 
-let Tabs = function(Crusher, Buttons) {
+let Tabs = function(Crusher, Buttons, Utils) {
     this.onClose = function(event) {
         let tab = event.target;
         let browser = tab.linkedBrowser;
@@ -35,16 +35,20 @@ let Tabs = function(Crusher, Buttons) {
     };
     
     this.init = function(window) {
-        let tabBrowser = window.gBrowser;
-        
-        for (let tab of tabBrowser.tabs) {
-            let browser = window.gBrowser.getBrowserForTab(tab);
-            browser["previousDomain"] = browser.contentDocument.domain;
-        }
-        
-        tabBrowser.tabContainer.addEventListener("TabClose", this.onClose, false);
-        tabBrowser.addTabsProgressListener(this.onTabProgress);
-        tabBrowser.addProgressListener(this.onProgress);
+        Utils.setTimeout(function() {
+            if (!Components.utils.isDeadWrapper(window)) {
+                let tabBrowser = window.gBrowser;
+                
+                for (let tab of tabBrowser.tabs) {
+                    let browser = window.gBrowser.getBrowserForTab(tab);
+                    browser["previousDomain"] = browser.contentDocument.domain;
+                }
+                
+                tabBrowser.tabContainer.addEventListener("TabClose", this.onClose, false);
+                tabBrowser.addTabsProgressListener(this.onTabProgress);
+                tabBrowser.addProgressListener(this.onProgress);
+            }
+        }, 3);
     };
     
     this.clear = function(window) {
