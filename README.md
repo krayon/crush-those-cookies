@@ -23,8 +23,10 @@ Be also careful while restoring previous tabs on the browser's startup. Either r
 
 Use it at your own risk.
 
+### Alternative extension
+There is an alternative extension of this kind called Cookie Exterminator which is developed by JustOff. It has several improvements over this one while providing functionality from original Self-Destructing Cookies extension for Firefox and adding some interesting custom features as well.
+
+If you prefer more similarity to SDC, then you might want to install Cookie Exterminator instead of Crush Those Cookies. All detailed information about Cookie Exterminator are available [here](https://addons.mozilla.org/en-US/firefox/addon/cookies-exterminator/).
+
 ### Building
 Run build.sh script in a terminal on Linux or any similar environment for Windows like Cygwin. The extension's .xpi archive containing all necessary files will be created automatically.
-
-### Alternative extension
-There is an alternative extension of this kind called Cookie Exterminator which is developed by JustOff. It has several improvements over this one while providing functionality from original Self-Destructing Cookies extension for Firefox and adding some interesting custom features as well. If you prefer more similarity to SDC, then you might want to install Cookie Exterminator instead of Crush Those Cookies. All detailed information about Cookie Exterminator are available [here](https://addons.mozilla.org/en-US/firefox/addon/cookies-exterminator/).
