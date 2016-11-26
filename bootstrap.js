@@ -11,6 +11,7 @@ let Log = null;
 let Windows = null;
 
 let onPrefsApply = null;
+let onSessionHistoryPurge = null;
 
 function startup(data, reason) {
     // object as a scope for imports
@@ -58,10 +59,16 @@ function startup(data, reason) {
         }
     };
     
+    onSessionHistoryPurge = {
+        observe: function(aSubject, aTopic, aData) {
+            Log.onClear.observe(aSubject, aTopic, aData);
+        }
+    };
+    
     Services.obs.addObserver(onPrefsApply, "ctcPrefsApply", false);
     Services.obs.addObserver(Log.onOpen, "ctcLogOpen", false);
     Services.obs.addObserver(Log.onClear, "ctcLogClear", false);
-    Services.obs.addObserver(Log.onClear, "browser:purge-session-history", false);
+    Services.obs.addObserver(onSessionHistoryPurge, "browser:purge-session-history", false);
 }
 
 function shutdown(data, reason) {
@@ -71,7 +78,7 @@ function shutdown(data, reason) {
     Services.obs.removeObserver(onPrefsApply, "ctcPrefsApply");
     Services.obs.removeObserver(Log.onOpen, "ctcLogOpen");
     Services.obs.removeObserver(Log.onClear, "ctcLogClear");
-    Services.obs.removeObserver(Log.onClear, "browser:purge-session-history");
+    Services.obs.removeObserver(onSessionHistoryPurge, "browser:purge-session-history");
     
     // cleanup
     Windows.clear();
