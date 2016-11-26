@@ -62,6 +62,7 @@ function startup(data, reason) {
     onSessionHistoryPurge = {
         observe: function(aSubject, aTopic, aData) {
             Log.onClear.observe(aSubject, aTopic, aData);
+            Buttons.clearTooltipText();
         }
     };
     

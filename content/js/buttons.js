@@ -422,4 +422,15 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
     this.onPrefsApply = function() {
         this.refresh();
     };
+    
+    this.clearTooltipText = function() {
+        let windowsEnumerator = Services.wm.getEnumerator("navigator:browser");
+        while (windowsEnumerator.hasMoreElements()) {
+            let window = windowsEnumerator.getNext().QueryInterface(Components.interfaces.nsIDOMWindow);
+            let button = window.document.getElementById(this.buttonId);
+            if (button) {
+                button.setAttribute("tooltiptext", this.tooltipTexts.initial);
+            }
+        }
+    };
 };
