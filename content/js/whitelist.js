@@ -11,10 +11,8 @@ let Whitelist = function(Prefs) {
         this.domains = {};
         
         let whitelistedDomains = Prefs.getValue("whitelistedDomains");
-        
         if (whitelistedDomains != "") {
             let separatedDomains = whitelistedDomains.split(';');
-            
             for (let domain of separatedDomains) {
                 this.domains[domain] = true;
             }

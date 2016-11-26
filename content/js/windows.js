@@ -5,7 +5,7 @@ Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
 
 let Windows = function(Tabs, Buttons, Crusher, Prefs) {
     this.onCloseWindow = function(event) {
-        let domWindow = event.target;
+        let window = event.target;
         if (Services) {
             let windowsEnumerator = Services.wm.getEnumerator("navigator:browser");
             let windowsCounter = 0;
@@ -16,10 +16,9 @@ let Windows = function(Tabs, Buttons, Crusher, Prefs) {
             }
             
             if (windowsCounter > 1 || Prefs.getValue("crushOnLastWindowClose")) {
-                let tabBrowser = domWindow.gBrowser;
-                
                 let domains = [];
                 
+                let tabBrowser = window.gBrowser;
                 for (let tab of tabBrowser.tabs) {
                     let browser = tab.linkedBrowser;
                     let domain = browser.contentDocument.domain;
@@ -28,35 +27,33 @@ let Windows = function(Tabs, Buttons, Crusher, Prefs) {
                 }
                 
                 let immediatelyForLastWindow = windowsCounter == 1;
-                
                 Crusher.prepare(domains, immediatelyForLastWindow);
             }
             
-            Tabs.clear(domWindow);
-            Buttons.clear(domWindow);
+            Tabs.clear(window);
+            Buttons.clear(window);
         }
     };
     
     this.windowListener = {
         onOpenWindow: function(nsIObj) {
-            let domWindow = nsIObj.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-                                  .getInterface(Components.interfaces.nsIDOMWindow);
+            let window = nsIObj.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                               .getInterface(Components.interfaces.nsIDOMWindow);
             
             let that = this;
             
-            domWindow.addEventListener("load", function() {
-                domWindow.removeEventListener("load", arguments.callee, false);
-                domWindow.setTimeout(function() {
-                    if (domWindow.document.documentElement.getAttribute("windowtype") === "navigator:browser") {
-                        if (!PrivateBrowsingUtils.isWindowPrivate(domWindow)) {
-                            Tabs.init(domWindow);
-                            domWindow.addEventListener("close", that.onCloseWindow, true);
-                        }
-                        
-                        Buttons.init(domWindow);
+            window.addEventListener("load", function() {
+                window.removeEventListener("load", arguments.callee, false);
+                
+                if (window.document.documentElement.getAttribute("windowtype") === "navigator:browser") {
+                    if (!PrivateBrowsingUtils.isWindowPrivate(window)) {
+                        Tabs.init(window);
+                        window.addEventListener("close", that.onCloseWindow, true);
                     }
-                }, 0, domWindow);
-            }, false);
+                    
+                    Buttons.init(window);
+                }
+            });
         }
     };
     

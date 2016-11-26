@@ -37,7 +37,6 @@ let Crusher = function(Prefs, Buttons, Whitelist, Log, Notifications, Utils) {
         
         while (cookiesEnumerator.hasMoreElements()) {
             let cookie = cookiesEnumerator.getNext().QueryInterface(Components.interfaces.nsICookie2);
-            
             let cookieRawDomain = Utils.getRawDomain(cookie.rawHost);
 
             if (this.mayBeCrushed(cookie, cookieRawDomain, timestamp, ignoreBrowsersCheck)) {
