@@ -3,20 +3,17 @@ let EXPORTED_SYMBOLS = ["Log"];
 Components.utils.import("resource://gre/modules/Services.jsm");
 
 let Log = function(Prefs) {
-    this.maxMessages = 100;
+    this.maxMessages = 25;
     this.loggedMessages = [];
     
     this.log = function(crushedDomainsString) {
         if (Prefs.getValue("enableLogging") && crushedDomainsString) {
             let date = new Date();
-            let readableDate = ("0" + date.getDate()).slice(-2) + "." +
-                               ("0" + (date.getMonth() + 1)).slice(-2) + "." +
-                               date.getFullYear() + " " +
-                               ("0" + date.getHours()).slice(-2) + ":" +
+            let readableDate = ("0" + date.getHours()).slice(-2) + ":" +
                                ("0" + date.getMinutes()).slice(-2) + ":" +
                                ("0" + date.getSeconds()).slice(-2);
             
-            let message = readableDate + " - crushed cookies from " +
+            let message = "[" + readableDate + "] Crushed cookies from " +
                           crushedDomainsString;
             
             this.loggedMessages.push(message);

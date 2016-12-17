@@ -24,9 +24,15 @@
     ]]>
   </script>
   
-  <vbox flex="1" style="padding: 5px">
-    <textbox id="logTextbox" height="280" multiline="true" readonly="true"></textbox>
-  </vbox>
+  <tabbox id="tabbox" flex="1" style="padding: 5px">
+    <tabpanels flex="1">
+      <tabpanel>
+        <vbox flex="1">
+          <textbox id="logTextbox" height="280" multiline="true" readonly="true"></textbox>
+        </vbox>
+      </tabpanel>
+    </tabpanels>
+  </tabbox>
   
   <hbox style="padding: 0px 0px 5px 0px">
     <button label="Clear log" oncommand="onClearLog();" width="500"/>
