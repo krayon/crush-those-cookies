@@ -67,14 +67,10 @@ let Crusher = function(Prefs, Buttons, Whitelist, Log, Notifications, Utils) {
     this.mayBeCrushed = function(cookie, cookieRawDomain, timestamp, ignoreBrowsersCheck) {
         let cookieLastAccessTimestamp = cookie.lastAccessed / 1000; // cut redundant 000
         
-        if (cookieLastAccessTimestamp > timestamp ||
+        if ((!ignoreBrowsersCheck && cookieLastAccessTimestamp > timestamp) ||
             Whitelist.isWhitelisted(cookieRawDomain) ||
             (!Prefs.getValue("keepCrushingSessionCookies") && cookie.isSession)) {
             return false;
-        }
-        
-        if (ignoreBrowsersCheck) {
-            return true;
         }
         
         let windowsEnumerator = Services.wm.getEnumerator("navigator:browser");
@@ -92,30 +88,32 @@ let Crusher = function(Prefs, Buttons, Whitelist, Log, Notifications, Utils) {
                 let domain = browser.contentDocument.domain;
                 
                 if (domain) {
-                    let rawDomain = domain;
-                    
-                    if (Prefs.getValue("enableStrictDomainChecking")) {
-                        rawDomain = Utils.getRawDomain(domain);
-                    } else {
-                        let rawDomainParts = rawDomain.split('.');
-                        let rawDomainPartsAmount = rawDomainParts.length;
+                    if (!ignoreBrowsersCheck) {
+                        let rawDomain = domain;
                         
-                        if (rawDomainPartsAmount > 1) {
-                            rawDomain = rawDomainParts[rawDomainPartsAmount - 2] + '.' +
-                                        rawDomainParts[rawDomainPartsAmount - 1];
+                        if (Prefs.getValue("enableStrictDomainChecking")) {
+                            rawDomain = Utils.getRawDomain(domain);
+                        } else {
+                            let rawDomainParts = rawDomain.split('.');
+                            let rawDomainPartsAmount = rawDomainParts.length;
+                            
+                            if (rawDomainPartsAmount > 1) {
+                                rawDomain = rawDomainParts[rawDomainPartsAmount - 2] + '.' +
+                                            rawDomainParts[rawDomainPartsAmount - 1];
+                            }
+                            
+                            let cookieRawDomainParts = cookieRawDomain.split('.');
+                            let cookieRawDomainPartsAmount = cookieRawDomainParts.length;
+                            
+                            if (cookieRawDomainPartsAmount > 1) {
+                                cookieRawDomain = cookieRawDomainParts[cookieRawDomainPartsAmount - 2] + '.' +
+                                                  cookieRawDomainParts[cookieRawDomainPartsAmount - 1];
+                            }
                         }
                         
-                        let cookieRawDomainParts = cookieRawDomain.split('.');
-                        let cookieRawDomainPartsAmount = cookieRawDomainParts.length;
-                        
-                        if (cookieRawDomainPartsAmount > 1) {
-                            cookieRawDomain = cookieRawDomainParts[cookieRawDomainPartsAmount - 2] + '.' +
-                                              cookieRawDomainParts[cookieRawDomainPartsAmount - 1];
+                        if (rawDomain == cookieRawDomain) {
+                            return false;
                         }
-                    }
-                    
-                    if (rawDomain == cookieRawDomain) {
-                        return false;
                     }
                     
                     if (Prefs.getValue("keepCrushingLocalStorage")) {

@@ -26,7 +26,7 @@ let Windows = function(Tabs, Buttons, Crusher, Prefs) {
                     domains.push(domain);
                 }
                 
-                let immediatelyForLastWindow = windowsCounter == 1;
+                let immediatelyForLastWindow = windowsCounter < 2;
                 Crusher.prepare(domains, immediatelyForLastWindow);
             }
             
@@ -85,8 +85,8 @@ let Windows = function(Tabs, Buttons, Crusher, Prefs) {
             
             if (window.document.documentElement.getAttribute("windowtype") === "navigator:browser") {
                 if (!PrivateBrowsingUtils.isWindowPrivate(window)) {
-                    window.removeEventListener("close", this.onCloseWindow);
                     Tabs.clear(window);
+                    window.removeEventListener("close", this.onCloseWindow, true);
                 }
                 
                 Buttons.clear(window);
