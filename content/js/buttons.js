@@ -53,6 +53,8 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         
     this.menupopupId = "ctcMenupopup";
     
+    this.styleSheetId = "ctcStyle";
+    
     this.notificationIconTimeout = 5;
     
     this.init = function(window, firstRun) {
@@ -69,8 +71,61 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         button.setAttribute("type", "menu");
         button.setAttribute("class", "toolbarbutton-1 chromeclass-toolbar-additional");
         button.setAttribute("tooltiptext", this.tooltipTexts.initial);
-        button.style.listStyleImage = "url(" + this.contentURL + this.iconFileNames.normal + ")";
+        button.style.listStyleImage = "url(" + this.contentURL + 'large_' + this.iconFileNames.normal + ")";
         button.style.MozBoxOrient = "inherit";
+        
+        button.setAttribute("state", "1");
+        
+        let rules = [];
+        rules[0] = '                                                                                                        \
+            #' + this.buttonId + '[state="1"] {                                                                             \
+                list-style-image: url("' + this.contentURL + 'large_' + this.iconFileNames.normal + '") !important;         \
+            }                                                                                                               \                                                                                                 \
+        ';
+        rules[1] = '                                                                                                        \
+            #' + this.buttonId + '[state="2"] {                                                                             \
+                list-style-image: url("' + this.contentURL + 'large_' + this.iconFileNames.suspended + '") !important;      \
+            }                                                                                                               \                                                                                                \
+        ';
+        rules[2] = '                                                                                                        \
+            #' + this.buttonId + '[state="3"] {                                                                             \
+                list-style-image: url("' + this.contentURL + 'large_' + this.iconFileNames.crushed + '") !important;        \
+            }                                                                                                               \                                                                                                \
+        ';
+        rules[3] = '                                                                                                        \
+            #' + this.buttonId + '[state="4"] {                                                                             \
+                list-style-image: url("' + this.contentURL + 'large_' + this.iconFileNames.whitelisted + '")  !important;   \
+            }                                                                                                               \                                                                                                \
+        ';
+        rules[4] = '                                                                                                        \
+            toolbar[iconsize="small"] #' + this.buttonId + '[state="1"] {                                                   \
+                list-style-image: url("' + this.contentURL + this.iconFileNames.normal + '") !important;                    \
+            }                                                                                                               \                                                                                                \
+        ';
+        rules[5] = '                                                                                                        \
+            toolbar[iconsize="small"] #' + this.buttonId + '[state="2"] {                                                   \
+                list-style-image: url("' + this.contentURL + this.iconFileNames.suspended + '") !important;                 \
+            }                                                                                                               \                                                                                                \
+        ';
+        rules[6] = '                                                                                                        \
+            toolbar[iconsize="small"] #' + this.buttonId + '[state="3"] {                                                   \
+                list-style-image: url("' + this.contentURL + this.iconFileNames.crushed + '") !important;                   \
+            }                                                                                                               \                                                                                           \
+        ';
+        rules[7] = '                                                                                                        \
+            toolbar[iconsize="small"] #' + this.buttonId + '[state="4"] {                                                   \
+                list-style-image: url("' + this.contentURL + this.iconFileNames.whitelisted + '") !important;               \
+            }                                                                                                               \                                                                                             \
+        ';
+        
+        let style = document.createElementNS("http://www.w3.org/1999/xhtml", "style");
+        style.setAttribute("type", "text/css");
+        style.setAttribute("id", this.styleSheetId);
+        document.documentElement.appendChild(style);
+        
+        for (let rule of rules) {
+            style.sheet.insertRule(rule, style.sheet.cssRules.length);
+        }
         
         let Buttons = this;
         
@@ -331,7 +386,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
             
             if (crushedDomainsString) {
                 button.setAttribute("tooltiptext", this.tooltipTexts.crushed + crushedDomainsString);
-                button.style.listStyleImage = "url(" + this.contentURL + this.iconFileNames.crushed + ")";
+                button.setAttribute("state", "3");
                 
                 Utils.setTimeout(function() {
                     Buttons.refresh(window);
@@ -374,18 +429,18 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         if (button) {
             if (Prefs.getValue("suspendCrushing")) {
                 button.setAttribute("tooltiptext", this.tooltipTexts.suspended);
-                button.style.listStyleImage = "url(" + this.contentURL + this.iconFileNames.suspended + ")";
+                button.setAttribute("state", "2");
             } else if (PrivateBrowsingUtils.isWindowPrivate(window)) {
                 button.setAttribute("tooltiptext", this.tooltipTexts.privateWindow);
-                button.style.listStyleImage = "url(" + this.contentURL + this.iconFileNames.whitelisted + ")";
+                button.setAttribute("state", "4");
             } else {
                 let domain = window.gBrowser.contentDocument.domain;
                 let rawDomain = Utils.getRawDomain(domain);
             
                 if (!rawDomain || Whitelist.isWhitelisted(rawDomain)) {
-                    button.style.listStyleImage = "url(" + this.contentURL + this.iconFileNames.whitelisted + ")";
+                    button.setAttribute("state", "4");
                 } else {
-                    button.style.listStyleImage = "url(" + this.contentURL + this.iconFileNames.normal + ")";
+                    button.setAttribute("state", "1");
                 }
                 
                 let buttonOldTooltipText = button.getAttribute("tooltiptext");
@@ -402,6 +457,11 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         
         if (button) {
             button.parentNode.removeChild(button);
+        }
+        
+        let css = window.document.getElementById(this.styleSheetId);
+        if (css) {
+            css.parentNode.removeChild(css);
         }
         
         let navigatorToolbox = window.document.getElementById("navigator-toolbox");
