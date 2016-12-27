@@ -1,5 +1,5 @@
 ## Crush Those Cookies
-This is an extension for Pale Moon web browser which crushes those cookies which are no longer desirable. It simply removes cookies coming from websites when they are unloaded or their tabs are closed after specified delay. By default this also includes third-party cookies and LocalStorage data.
+This is an extension for Pale Moon web browser, which crushes those cookies which are no longer desirable. It simply removes cookies coming from websites when they are unloaded or their tabs are closed after specified delay. By default this also includes third-party cookies and LocalStorage data.
 
 A whitelist can be used to manually exclude domains, subdomains or basic wildcard domains from crushing cookies of their origin. The extension comes with a toolbar menu button, providing quick access to some common actions including whitelist modification.
 
