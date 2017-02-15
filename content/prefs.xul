@@ -207,10 +207,9 @@
           <spacer flex="0" height="15"/>
         
           <hbox flex="0" align="center">
-            <label value="Cookie crushing delay in seconds"/>
+            <label value="Cookie crushing delay (in seconds)"/>
             <spacer flex="1"/>
-            <textbox id="crushingDelay" type="number" width="40" min="0" max="600"/>
-            <spacer flex="10"/>
+            <textbox id="crushingDelay" type="number" width="55" min="0" max="600"/>
           </hbox>
           
           <hbox flex="0" align="center">
