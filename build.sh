@@ -1,7 +1,9 @@
 #!/bin/bash
 # pack everything into an .xpi archive
 zip -rq crush-those-cookies.xpi \
-    content \
+    forms \
+    images \
+    modules \
     bootstrap.js \
     chrome.manifest \
     install.rdf \

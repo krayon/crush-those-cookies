@@ -13,8 +13,8 @@
     <em:version>1.3.0</em:version>
     <em:type>2</em:type>
     <em:bootstrap>true</em:bootstrap>
-    <em:optionsURL>chrome://crush-those-cookies/content/prefs.xul</em:optionsURL>
-    <em:iconURL>chrome://crush-those-cookies/content/icon.png</em:iconURL>
+    <em:optionsURL>chrome://crush-those-cookies/content/forms/prefs.xul</em:optionsURL>
+    <em:iconURL>chrome://crush-those-cookies/content/images/icon.png</em:iconURL>
     
     <!-- Pale Moon -->
     <em:targetApplication>

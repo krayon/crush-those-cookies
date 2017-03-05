@@ -4,7 +4,8 @@ Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
 
 let Buttons = function(extName, Prefs, Whitelist, Utils) {
-    this.contentURL = "chrome://" + extName + "/content/";
+    this.imagesURL = "chrome://" + extName + "/content/images/";
+    this.formsURL = "chrome://" + extName + "/content/forms/";
     
     this.iconFileNames = {
         normal: "toolbar_icon.png",
@@ -13,7 +14,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         whitelisted: "toolbar_icon_whitelisted.png"
     };
     
-    this.xulDocFileNames = {
+    this.xulFormsFileNames = {
         prefs: "prefs.xul",
         log: "log.xul"
     };
@@ -71,7 +72,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         button.setAttribute("type", "menu");
         button.setAttribute("class", "toolbarbutton-1 chromeclass-toolbar-additional");
         button.setAttribute("tooltiptext", this.tooltipTexts.initial);
-        button.style.listStyleImage = "url(" + this.contentURL + 'large_' + this.iconFileNames.normal + ")";
+        button.style.listStyleImage = "url(" + this.imagesURL + 'large_' + this.iconFileNames.normal + ")";
         button.style.MozBoxOrient = "inherit";
         
         button.setAttribute("state", "1");
@@ -79,42 +80,42 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         let rules = [];
         rules[0] = '                                                                                                        \
             #' + this.buttonId + '[state="1"] {                                                                             \
-                list-style-image: url("' + this.contentURL + 'large_' + this.iconFileNames.normal + '") !important;         \
+                list-style-image: url("' + this.imagesURL + 'large_' + this.iconFileNames.normal + '") !important;         \
             }                                                                                                               \                                                                                                 \
         ';
         rules[1] = '                                                                                                        \
             #' + this.buttonId + '[state="2"] {                                                                             \
-                list-style-image: url("' + this.contentURL + 'large_' + this.iconFileNames.suspended + '") !important;      \
+                list-style-image: url("' + this.imagesURL + 'large_' + this.iconFileNames.suspended + '") !important;      \
             }                                                                                                               \                                                                                                \
         ';
         rules[2] = '                                                                                                        \
             #' + this.buttonId + '[state="3"] {                                                                             \
-                list-style-image: url("' + this.contentURL + 'large_' + this.iconFileNames.crushed + '") !important;        \
+                list-style-image: url("' + this.imagesURL + 'large_' + this.iconFileNames.crushed + '") !important;        \
             }                                                                                                               \                                                                                                \
         ';
         rules[3] = '                                                                                                        \
             #' + this.buttonId + '[state="4"] {                                                                             \
-                list-style-image: url("' + this.contentURL + 'large_' + this.iconFileNames.whitelisted + '")  !important;   \
+                list-style-image: url("' + this.imagesURL + 'large_' + this.iconFileNames.whitelisted + '")  !important;   \
             }                                                                                                               \                                                                                                \
         ';
         rules[4] = '                                                                                                        \
             toolbar[iconsize="small"] #' + this.buttonId + '[state="1"] {                                                   \
-                list-style-image: url("' + this.contentURL + this.iconFileNames.normal + '") !important;                    \
+                list-style-image: url("' + this.imagesURL + this.iconFileNames.normal + '") !important;                    \
             }                                                                                                               \                                                                                                \
         ';
         rules[5] = '                                                                                                        \
             toolbar[iconsize="small"] #' + this.buttonId + '[state="2"] {                                                   \
-                list-style-image: url("' + this.contentURL + this.iconFileNames.suspended + '") !important;                 \
+                list-style-image: url("' + this.imagesURL + this.iconFileNames.suspended + '") !important;                 \
             }                                                                                                               \                                                                                                \
         ';
         rules[6] = '                                                                                                        \
             toolbar[iconsize="small"] #' + this.buttonId + '[state="3"] {                                                   \
-                list-style-image: url("' + this.contentURL + this.iconFileNames.crushed + '") !important;                   \
+                list-style-image: url("' + this.imagesURL + this.iconFileNames.crushed + '") !important;                   \
             }                                                                                                               \                                                                                           \
         ';
         rules[7] = '                                                                                                        \
             toolbar[iconsize="small"] #' + this.buttonId + '[state="4"] {                                                   \
-                list-style-image: url("' + this.contentURL + this.iconFileNames.whitelisted + '") !important;               \
+                list-style-image: url("' + this.imagesURL + this.iconFileNames.whitelisted + '") !important;               \
             }                                                                                                               \                                                                                             \
         ';
         
@@ -177,7 +178,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
                 existingWindow.focus();
             } else {
                 let window = Services.wm.getMostRecentWindow("navigator:browser");
-                window.openDialog(Buttons.contentURL + Buttons.xulDocFileNames.prefs, "", "minimizable,centerscreen", "whitelist");
+                window.openDialog(Buttons.formsURL + Buttons.xulFormsFileNames.prefs, "", "minimizable,centerscreen", "whitelist");
             }
         }, false);
         
@@ -214,7 +215,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
                 existingWindow.focus();
             } else {
                 let window = Services.wm.getMostRecentWindow("navigator:browser");
-                window.openDialog(Buttons.contentURL + Buttons.xulDocFileNames.log, "", "minimizable,centerscreen");
+                window.openDialog(Buttons.formsURL + Buttons.xulFormsFileNames.log, "", "minimizable,centerscreen");
             }
         }, false);
         
