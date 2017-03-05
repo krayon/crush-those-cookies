@@ -12,7 +12,7 @@ let Notifications = function(extName, Prefs) {
     
     this.notify = function(crushedDomainsString) {
         if (Prefs.getValue("enableNotifications") && crushedDomainsString) {
-            AlertsService.showAlertNotification(this.contentURL + this.iconFileName, 
+            AlertsService.showAlertNotification(this.imagesURL + this.iconFileName, 
                                                 this.alertTitle, crushedDomainsString, 
                                                 false, "", null, this.alertName);
         }
