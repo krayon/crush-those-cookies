@@ -26,7 +26,6 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
         initial: "Didn't crush any cookies yet",
         suspended: "Suspended",
         crushed: "Recently crushed cookies from ",
-        notCrushed: "Previously crushed cookies from ",
         privateWindow: "Private window omitted"
     };
     
@@ -381,16 +380,6 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
                 Utils.setTimeout(function() {
                     Buttons.refresh(window);
                 }, Buttons.notificationIconTimeout);
-            } else {
-                let buttonOldTooltipText = button.getAttribute("tooltiptext");
-                
-                // old tooltip text started with "Recently", change it to "Previously (...)";
-                if (buttonOldTooltipText.substr(0, 1) == "R") {
-                    button.setAttribute("tooltiptext", this.tooltipTexts.notCrushed +
-                                                       buttonOldTooltipText
-                                                       .substr(this.tooltipTexts.crushed.length,
-                                                               buttonOldTooltipText.length));
-                }
             }
         }
     };
