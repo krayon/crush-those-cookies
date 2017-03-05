@@ -2,22 +2,8 @@ let EXPORTED_SYMBOLS = ["Prefs"];
 
 Components.utils.import("resource://gre/modules/Services.jsm");
 
-let Prefs = function(extName) {
-    this.defaultPrefs = {
-        suspendCrushing: false,
-        enableLogging: true,
-        enableNotifications: true,
-        enableStrictDomainChecking: false,
-        keepCrushingThirdPartyCookies: true,
-        keepCrushingSessionCookies: true,
-        keepCrushingLocalStorage: true,
-        crushingDelay: 10,
-        crushOnLastWindowClose: false,
-        whitelistedDomains: "",
-        toolbarButtonPlaceId: "nav-bar",
-        toolbarButtonPosition: 0
-    };
-    
+let Prefs = function(extName, defaultPrefs) {
+    this.defaultPrefs = defaultPrefs;
     this.currentPrefs = {};
     
     this.prefsBranch = Services.prefs.getBranch("extensions." + extName + ".");

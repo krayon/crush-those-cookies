@@ -13,6 +13,21 @@ let Windows = null;
 let onPrefsApply = null;
 let onSessionHistoryPurge = null;
 
+let defaultPrefs = {
+    suspendCrushing: false,
+    enableLogging: true,
+    enableNotifications: true,
+    enableStrictDomainChecking: false,
+    keepCrushingThirdPartyCookies: true,
+    keepCrushingSessionCookies: true,
+    keepCrushingLocalStorage: true,
+    crushingDelay: 10,
+    crushOnLastWindowClose: false,
+    whitelistedDomains: "",
+    toolbarButtonPlaceId: "nav-bar",
+    toolbarButtonPosition: 0
+};
+
 function startup(data, reason) {
     // object as a scope for imports
     let Imports = {};
@@ -31,7 +46,7 @@ function startup(data, reason) {
     let Utils = new Imports.Utils();
     
     // create new objects from module symbols with passed dependencies
-    Prefs = new Imports.Prefs(extName);
+    Prefs = new Imports.Prefs(extName, defaultPrefs);
     Whitelist = new Imports.Whitelist(Prefs);
     Buttons = new Imports.Buttons(extName, Prefs, Whitelist, Utils);
     Log = new Imports.Log(Prefs);
