@@ -305,18 +305,7 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
                 // update button's position in preferences and save it
                 Prefs.setValue("toolbarButtonPosition", buttonPosition);
                 Prefs.save();
-            } else {
-                // temporary check for compatibility with previous version
-                if (toolbarButtonPosition < 0) {
-                    toolbarButtonPlaceId = "addon-bar";
-                    toolbarButtonPosition = -toolbarButtonPosition;
-                    
-                    // update button's place id and position in preferences and save it
-                    Prefs.setValue("toolbarButtonPlaceId", toolbarButtonPlaceId);
-                    Prefs.setValue("toolbarButtonPosition", toolbarButtonPosition);
-                    Prefs.save();
-                }
-                
+            } else {                
                 let someBar = document.getElementById(toolbarButtonPlaceId);
                 if (someBar) {
                     let buttonsArray = someBar.currentSet.split(",");
