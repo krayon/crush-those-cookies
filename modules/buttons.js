@@ -415,17 +415,15 @@ let Buttons = function(extName, Prefs, Whitelist, Utils) {
             } else {
                 let domain = window.gBrowser.contentDocument.domain;
                 let rawDomain = Utils.getRawDomain(domain);
-            
+                
+                if (button.getAttribute("state") == "2") {
+                    button.setAttribute("tooltiptext", this.tooltipTexts.initial);
+                }
+                
                 if (!rawDomain || Whitelist.isWhitelisted(rawDomain)) {
                     button.setAttribute("state", "4");
                 } else {
                     button.setAttribute("state", "1");
-                }
-                
-                let buttonOldTooltipText = button.getAttribute("tooltiptext");
-        
-                if (buttonOldTooltipText.substr(0, 1) == "S") {
-                    button.setAttribute("tooltiptext", this.tooltipTexts.initial);
                 }
             }
         }
