@@ -187,7 +187,7 @@
           <spacer flex="0" height="15"/>
           
           <hbox flex="0" align="center">
-           <checkbox id="enableStrictDomainChecking" label="Enable strict domain and subdomain checking"/>
+           <checkbox id="enableStrictDomainChecking" label="Enable strict domain and subdomain separation"/>
           </hbox>
           
           <spacer flex="0" height="15"/>
