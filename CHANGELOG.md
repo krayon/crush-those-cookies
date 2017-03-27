@@ -1,3 +1,8 @@
+#### 1.4.0
+* Fixed cookie crushing not being properly executed on browser exit.
+* Removed unnecessary toolbar button tooltip state "Previously crushed..."
+* Updated preferences window layout.
+
 #### 1.3.0
 * Fixed some things related to window close handling.
 * Fixed tooltip text not being cleared after purging session history.
