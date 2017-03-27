@@ -9,6 +9,7 @@ let Whitelist = null;
 let Buttons = null;
 let Log = null;
 let Windows = null;
+let Crusher = null;
 
 let onPrefsApply = null;
 let onSessionHistoryPurge = null;
@@ -52,7 +53,7 @@ function startup(data, reason) {
     Log = new Imports.Log(Prefs);
     
     let Notifications = new Imports.Notifications(extName, Prefs);
-    let Crusher = new Imports.Crusher(Prefs, Buttons, Whitelist, Log, Notifications, Utils);
+    Crusher = new Imports.Crusher(Prefs, Buttons, Whitelist, Log, Notifications, Utils);
     let Tabs = new Imports.Tabs(Crusher, Buttons, Utils);
     
     Windows = new Imports.Windows(Tabs, Buttons, Crusher, Prefs);
@@ -88,6 +89,25 @@ function startup(data, reason) {
 }
 
 function shutdown(data, reason) {
+    if (reason == APP_SHUTDOWN) {
+        if (Prefs.getValue("crushOnLastWindowClose")) {
+            let window = Services.wm.getMostRecentWindow("navigator:browser");
+            let tabBrowser = window.gBrowser;
+            let domains = [];
+            
+            for (let tab of tabBrowser.tabs) {
+                let browser = tab.linkedBrowser;
+                let domain = browser.contentDocument.domain;
+                
+                domains.push(domain);
+            }
+            
+            Crusher.prepare(domains, true);
+        }
+        
+        return;
+    }
+    
     // remove preferences and log windows event observers
     Services.obs.removeObserver(Prefs.onOpen, "ctcPrefsOpen");
     Services.obs.removeObserver(Prefs.onReset, "ctcPrefsReset");
