@@ -4,8 +4,7 @@ Components.utils.import("resource://gre/modules/Services.jsm");
 Components.utils.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
 
 let Windows = function(Tabs, Buttons, Crusher, Prefs) {
-    this.onCloseWindow = function(event) {
-        let window = event.target;
+    this.onCloseWindow = function(window) {
         if (Services) {
             let windowsEnumerator = Services.wm.getEnumerator("navigator:browser");
             let windowsCounter = 0;
@@ -15,7 +14,7 @@ let Windows = function(Tabs, Buttons, Crusher, Prefs) {
                 windowsCounter++;
             }
             
-            if (windowsCounter > 1 || Prefs.getValue("crushOnLastWindowClose")) {
+            if (windowsCounter > 0 || Prefs.getValue("crushOnLastWindowClose")) {
                 let domains = [];
                 
                 let tabBrowser = window.gBrowser;
@@ -26,7 +25,7 @@ let Windows = function(Tabs, Buttons, Crusher, Prefs) {
                     domains.push(domain);
                 }
                 
-                let immediatelyForLastWindow = windowsCounter < 2;
+                let immediatelyForLastWindow = (windowsCounter == 0);
                 Crusher.prepare(domains, immediatelyForLastWindow);
             }
             
@@ -35,29 +34,36 @@ let Windows = function(Tabs, Buttons, Crusher, Prefs) {
         }
     };
     
-    this.windowListener = {
-        onOpenWindow: function(nsIObj) {
-            let window = nsIObj.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
-                               .getInterface(Components.interfaces.nsIDOMWindow);
+    this.onOpenWindow = function(window) {
+        window.addEventListener("load", function() {
+            window.removeEventListener("load", arguments.callee, false);
             
-            let that = this;
-            
-            window.addEventListener("load", function() {
-                window.removeEventListener("load", arguments.callee, false);
-                
-                if (window.document.documentElement.getAttribute("windowtype") === "navigator:browser") {
-                    if (!PrivateBrowsingUtils.isWindowPrivate(window)) {
-                        Tabs.init(window);
-                        window.addEventListener("close", that.onCloseWindow, true);
-                    }
-                    
-                    Buttons.init(window);
+            if (window.document.documentElement.getAttribute("windowtype") == "navigator:browser") {
+                if (!PrivateBrowsingUtils.isWindowPrivate(window)) {
+                    Tabs.init(window);
                 }
-            });
-        }
+                
+                Buttons.init(window);
+            }
+        });
     };
     
-    this.windowListener.onOpenWindow = this.windowListener.onOpenWindow.bind(this);
+    this.windowObserver = {
+        Windows: this,
+        observe: function(aSubject, aTopic, aData) {
+            let window = aSubject.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                                 .getInterface(Components.interfaces.nsIDOMWindow);
+            
+            if (aTopic == "domwindowopened") {
+                this.Windows.onOpenWindow(window);
+            } else if (aTopic == "domwindowclosed") {
+                if (window.document.documentElement.getAttribute("windowtype") == "navigator:browser" &&
+                    !PrivateBrowsingUtils.isWindowPrivate(window)) {
+                    this.Windows.onCloseWindow(window);
+                }
+            }
+        }
+    };
 
     this.init = function(firstRun) {          
         let windowsEnumerator = Services.wm.getEnumerator("navigator:browser");
@@ -72,11 +78,11 @@ let Windows = function(Tabs, Buttons, Crusher, Prefs) {
             Buttons.init(window, firstRun);
         }
         
-        Services.wm.addListener(this.windowListener);
+        Services.ww.registerNotification(this.windowObserver);
     };
     
     this.clear = function() {
-        Services.wm.removeListener(this.windowListener);
+        Services.ww.unregisterNotification(this.windowObserver);
         
         let windowsEnumerator = Services.wm.getEnumerator("navigator:browser");
         
