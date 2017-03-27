@@ -213,7 +213,7 @@
           </hbox>
           
           <hbox flex="0" align="center">
-            <checkbox id="crushOnLastWindowClose" label="Crush cookies on browser's last window close"/>
+            <checkbox id="crushOnLastWindowClose" label="Crush cookies on browser exit"/>
           </hbox>
           
         </vbox>
